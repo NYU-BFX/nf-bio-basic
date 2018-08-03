@@ -53,6 +53,11 @@ run-conda-slurm:
 	unset PYTHONHOME; unset PYTHONPATH; source "$(CONDA_ACTIVATE)" && \
 	./nextflow run main.nf -profile conda,slurm $(EP)
 
+run-conda-sge:
+	if [ "$$( module > /dev/null 2>&1; echo $$?)" -eq 0 ]; then module unload python ; fi ; \
+	unset PYTHONHOME; unset PYTHONPATH; source "$(CONDA_ACTIVATE)" && \
+	./nextflow run main.nf -profile conda,sge $(EP)
+
 # ~~~~~ CLEANUP ~~~~~ #
 clean-traces:
 	rm -f trace*.txt.*
