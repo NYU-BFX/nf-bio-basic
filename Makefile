@@ -12,8 +12,8 @@ update: ./nextflow
 
 
 # ~~~~~ SETUP CONDA ~~~~~ #
-# CONDASH:=Miniconda3-4.5.4-Linux-x86_64.sh
-CONDASH:=Miniconda3-4.5.4-MacOSX-x86_64.sh
+CONDASH:=Miniconda3-4.5.4-Linux-x86_64.sh
+# CONDASH:=Miniconda3-4.5.4-MacOSX-x86_64.sh
 # CONDASH:=Miniconda3-4.5.4-Linux-ppc64le.sh
 CONDAURL:=https://repo.continuum.io/miniconda/$(CONDASH)
 CONDADIR:=$(shell python -c 'import os; print(os.path.realpath("conda"))')
@@ -43,9 +43,10 @@ run: install
 	./nextflow run main.nf $(EP)
 
 run-conda: install conda
-	source "$(CONDA_ACTIVATE)" && \
+	if [ "$$( module > /dev/null 2>&1; echo $$?)" -eq 0 ]; then module unload python ; fi ; \
+	unset PYTHONHOME; unset PYTHONPATH; source "$(CONDA_ACTIVATE)" && \
 	./nextflow run main.nf -profile conda $(EP)
-
+# unset PYTHONHOME; unset PYTHONPATH; export PATH=$(CONDADIR)/bin:$$PATH; \
 
 # ~~~~~ CLEANUP ~~~~~ #
 clean-traces:

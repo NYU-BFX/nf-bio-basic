@@ -32,9 +32,18 @@ NOTE: The conda version can be changed upon first install with the `CONDASH` arg
 make run-conda CONDASH=Miniconda3-4.5.4-Linux-x86_64.sh
 ```
 
+## Extra `run` Configuration
+
+Extra parameters can be passed to the Nextflow run command via the `EP` argument;
+
+```
+make run EP='-resume'
+```
+
 # Software
 - bash
 - Java 8 or later (for Nextflow)
+- Python
 - Docker (optional)
 - bzip2 (for conda)
 - standard GNU tools
