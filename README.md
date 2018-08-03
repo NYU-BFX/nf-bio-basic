@@ -40,6 +40,12 @@ Extra parameters can be passed to the Nextflow run command via the `EP` argument
 make run EP='-resume'
 ```
 
+### HPC Schedulers
+
+To submit jobs with an HPC scheduler, use one of the following commands:
+
+- `run-conda-slurm`
+
 # Software
 - bash
 - Java 8 or later (for Nextflow)

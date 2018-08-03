@@ -5,3 +5,4 @@ result*
 conda
 output/
 nextflow
+.now.projectlog.tsv

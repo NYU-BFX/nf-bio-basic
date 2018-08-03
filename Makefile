@@ -48,6 +48,11 @@ run-conda: install conda
 	./nextflow run main.nf -profile conda $(EP)
 # unset PYTHONHOME; unset PYTHONPATH; export PATH=$(CONDADIR)/bin:$$PATH; \
 
+run-conda-slurm:
+	if [ "$$( module > /dev/null 2>&1; echo $$?)" -eq 0 ]; then module unload python ; fi ; \
+	unset PYTHONHOME; unset PYTHONPATH; source "$(CONDA_ACTIVATE)" && \
+	./nextflow run main.nf -profile conda,slurm $(EP)
+
 # ~~~~~ CLEANUP ~~~~~ #
 clean-traces:
 	rm -f trace*.txt.*
