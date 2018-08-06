@@ -50,12 +50,12 @@ run-conda: install conda
 	unset PYTHONHOME; unset PYTHONPATH; source "$(CONDA_ACTIVATE)" && \
 	./nextflow run main.nf -profile conda $(EP)
 
-run-conda-slurm:
+run-conda-slurm: install conda
 	if [ "$$( module > /dev/null 2>&1; echo $$?)" -eq 0 ]; then module unload python ; fi ; \
 	unset PYTHONHOME; unset PYTHONPATH; source "$(CONDA_ACTIVATE)" && \
 	./nextflow run main.nf -profile slurmConda $(EP)
 
-run-conda-sge:
+run-conda-sge: install conda
 	if [ "$$( module > /dev/null 2>&1; echo $$?)" -eq 0 ]; then module unload python ; fi ; \
 	unset PYTHONHOME; unset PYTHONPATH; source "$(CONDA_ACTIVATE)" && \
 	./nextflow run main.nf -profile conda,sge $(EP)
