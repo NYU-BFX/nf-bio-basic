@@ -17,7 +17,7 @@ MirrorURL: http://us.archive.ubuntu.com/ubuntu/
     conda config --add channels bioconda
 
     # ~~~~~ MULTIQC ~~~~~ #
-    conda install -y -c bioconda salmon==0.8.2 fastqc==0.11.5 multiqc=1.5
+    conda install -y -c bioconda fastqc==0.11.5 multiqc=1.5
 
 %environment
     export PATH="/conda/bin:${PATH}"
