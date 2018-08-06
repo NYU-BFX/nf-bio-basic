@@ -44,8 +44,8 @@ make run EP='-resume'
 
 To submit jobs with an HPC scheduler, use one of the following commands:
 
-- `run-conda-slurm`
-- `run-conda-sge`
+- `make run-conda-slurm`
+- `make run-conda-sge`
 
 # Software
 - bash
