@@ -7,3 +7,4 @@ output/
 nextflow
 .now.projectlog.tsv
 .conda.old.*
+trace.txt*

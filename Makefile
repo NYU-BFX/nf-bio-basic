@@ -58,7 +58,7 @@ run-conda-slurm: install conda
 run-conda-sge: install conda
 	if [ "$$( module > /dev/null 2>&1; echo $$?)" -eq 0 ]; then module unload python ; fi ; \
 	unset PYTHONHOME; unset PYTHONPATH; source "$(CONDA_ACTIVATE)" && \
-	./nextflow run main.nf -profile conda,sge $(EP)
+	./nextflow run main.nf -profile sgeConda $(EP)
 
 # ~~~~~ CLEANUP ~~~~~ #
 clean-traces:
