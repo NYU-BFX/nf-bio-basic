@@ -27,6 +27,9 @@ conda:
 	conda config --add channels defaults && \
 	conda config --add channels bioconda
 
+# NOTE: methods of getting local conda into PATH;
+# unset PYTHONHOME; unset PYTHONPATH; export PATH=$(CONDADIR)/bin:$$PATH; \
+# unset PYTHONHOME; unset PYTHONPATH; source "$(CONDA_ACTIVATE)" && \
 
 # ~~~~~ SETUP DOCKER ~~~~~ #
 check-Docker:
@@ -38,7 +41,7 @@ docker-test: docker
 
 
 # ~~~~~ RUN PIPELINE ~~~~~ #
-# $ make EP='-profile sge'
+# $ make run EP='-profile sge -resume'
 run: install
 	./nextflow run main.nf $(EP)
 
@@ -46,12 +49,11 @@ run-conda: install conda
 	if [ "$$( module > /dev/null 2>&1; echo $$?)" -eq 0 ]; then module unload python ; fi ; \
 	unset PYTHONHOME; unset PYTHONPATH; source "$(CONDA_ACTIVATE)" && \
 	./nextflow run main.nf -profile conda $(EP)
-# unset PYTHONHOME; unset PYTHONPATH; export PATH=$(CONDADIR)/bin:$$PATH; \
 
 run-conda-slurm:
 	if [ "$$( module > /dev/null 2>&1; echo $$?)" -eq 0 ]; then module unload python ; fi ; \
 	unset PYTHONHOME; unset PYTHONPATH; source "$(CONDA_ACTIVATE)" && \
-	./nextflow run main.nf -profile conda,slurm $(EP)
+	./nextflow run main.nf -profile slurmConda $(EP)
 
 run-conda-sge:
 	if [ "$$( module > /dev/null 2>&1; echo $$?)" -eq 0 ]; then module unload python ; fi ; \
@@ -87,3 +89,7 @@ clean-all: clean clean-output clean-work
 	rm -f *.png
 	rm -f trace*.txt*
 	rm -f *.html*
+
+TIMESTAMP=$(shell date +%s)
+clean-conda:
+	[ -d conda ] && mv conda ".conda.old.${TIMESTAMP}" && rm -rf ".conda.old.${TIMESTAMP}" &

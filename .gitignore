@@ -6,3 +6,4 @@ conda
 output/
 nextflow
 .now.projectlog.tsv
+.conda.old.*
