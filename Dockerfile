@@ -15,6 +15,6 @@ ENV PATH="/conda/bin:${PATH}"
 RUN conda config --add channels defaults
 RUN conda config --add channels conda-forge
 RUN conda config --add channels bioconda
-RUN conda install -y -c bioconda fastqc==0.11.5 multiqc=1.5
+RUN conda install -y -c bioconda fastqc==0.11.7 multiqc=1.5
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8

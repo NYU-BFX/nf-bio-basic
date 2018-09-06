@@ -18,7 +18,7 @@ From: ubuntu:16.04
     conda config --add channels bioconda
 
     # ~~~~~ MULTIQC ~~~~~ #
-    conda install -y -c bioconda fastqc==0.11.5 multiqc=1.5
+    conda install -y -c bioconda fastqc==0.11.7 multiqc=1.5
 
 %environment
     export PATH="/conda/bin:${PATH}"
