@@ -1,4 +1,5 @@
 SHELL:=/bin/bash
+UNAME:=$(shell uname)
 none:
 
 # ~~~~~ SETUP PIPELINE ~~~~~ #
@@ -12,8 +13,13 @@ update: ./nextflow
 
 
 # ~~~~~ SETUP CONDA ~~~~~ #
+ifeq ($(UNAME), Darwin)
+CONDASH:=Miniconda3-4.5.4-MacOSX-x86_64.sh
+endif
+
+ifeq ($(UNAME), Linux)
 CONDASH:=Miniconda3-4.5.4-Linux-x86_64.sh
-# CONDASH:=Miniconda3-4.5.4-MacOSX-x86_64.sh
+endif
 # CONDASH:=Miniconda3-4.5.4-Linux-ppc64le.sh
 CONDAURL:=https://repo.continuum.io/miniconda/$(CONDASH)
 CONDADIR:=$(shell python -c 'import os; print(os.path.realpath("conda"))')
@@ -63,7 +69,7 @@ vagrant-installed:
 # singularity-vm/image: singularity-vm
 # 	mkdir -p singularity-vm/image
 
-singularity-vm/image/Singularity:
+singularity-vm/image/Singularity: 
 	/bin/cp -v Singularity singularity-vm/image/Singularity
 
 # Create the Singularity container file
@@ -86,6 +92,7 @@ singularity-test: singularity-vm/image/multiqc.txt
 
 # ~~~~~ RUN PIPELINE ~~~~~ #
 # $ make run EP='-profile sge -resume'
+# default run use Docker, executes locally
 run: install
 	./nextflow run main.nf $(EP)
 
@@ -103,6 +110,11 @@ run-conda-sge: install conda
 	if [ "$$( module > /dev/null 2>&1; echo $$?)" -eq 0 ]; then module unload python ; fi ; \
 	unset PYTHONHOME; unset PYTHONPATH; source "$(CONDA_ACTIVATE)" && \
 	./nextflow run main.nf -profile sgeConda $(EP)
+
+SINGULARITYIMG:=singularity-vm/image/nf-bio-basic.simg
+run-singularity-slurm: install
+	./nextflow run main.nf -profile singularity
+
 
 # ~~~~~ CLEANUP ~~~~~ #
 clean-traces:
