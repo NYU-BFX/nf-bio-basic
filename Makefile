@@ -119,6 +119,9 @@ SINGULARITYIMG:=singularity-vm/image/nf-bio-basic.simg
 run-singularity-slurm: install
 	./nextflow run main.nf -profile singularity,slurm $(EP)
 
+run-singularity: install
+	./nextflow run main.nf -profile singularity $(EP)
+
 
 # ~~~~~ CLEANUP ~~~~~ #
 clean-traces:
