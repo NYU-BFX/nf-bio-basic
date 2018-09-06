@@ -2,12 +2,15 @@ params.reads = "$baseDir/data/ggal/gut_{1,2}.fq"
 params.multiqc = "$baseDir/multiqc"
 params.outdir = "output"
 
-println """\
-         ===================================
-         reads        : ${params.reads}
-         outdir       : ${params.outdir}
-         """
-         .stripIndent()
+log.info "~~~ Nextflow Bioinformatics Basic Pipeline ~~"
+log.info "* reads:              ${params.reads}"
+log.info "* outdir:             ${params.outdir}"
+log.info "* Launch dir:         ${workflow.launchDir}"
+log.info "* Work dir:           ${workflow.workDir}"
+log.info "* Profile             ${workflow.profile ?: '-'}"
+log.info "* Workflow container  ${workflow.container ?: '-'}"
+log.info "* container engine    ${workflow.containerEngine?:'-'}"
+log.info "* Nextflow run name   ${workflow.runName}"
 
 
 Channel.fromFilePairs( params.reads )
@@ -27,8 +30,6 @@ process fastqc {
 
     script:
     """
-    which conda
-    which fastqc
     mkdir fastqc_${sample_id}_logs
     fastqc -o fastqc_${sample_id}_logs -f fastq -q ${reads}
     """

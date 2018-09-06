@@ -36,6 +36,9 @@ conda:
 # NOTE: methods of getting local conda into PATH;
 # unset PYTHONHOME; unset PYTHONPATH; export PATH=$(CONDADIR)/bin:$$PATH; \
 # unset PYTHONHOME; unset PYTHONPATH; source "$(CONDA_ACTIVATE)" && \
+TIMESTAMP=$(shell date +%s)
+clean-conda:
+	[ -d conda ] && mv conda ".conda.old.${TIMESTAMP}" && rm -rf ".conda.old.${TIMESTAMP}" &
 
 # ~~~~~ SETUP DOCKER ~~~~~ #
 check-Docker:
@@ -101,6 +104,7 @@ run-conda: install conda
 	unset PYTHONHOME; unset PYTHONPATH; source "$(CONDA_ACTIVATE)" && \
 	./nextflow run main.nf -profile conda $(EP)
 
+# conda needs to be in PATH for parent Nextflow process !!
 run-conda-slurm: install conda
 	if [ "$$( module > /dev/null 2>&1; echo $$?)" -eq 0 ]; then module unload python ; fi ; \
 	unset PYTHONHOME; unset PYTHONPATH; source "$(CONDA_ACTIVATE)" && \
@@ -113,7 +117,7 @@ run-conda-sge: install conda
 
 SINGULARITYIMG:=singularity-vm/image/nf-bio-basic.simg
 run-singularity-slurm: install
-	./nextflow run main.nf -profile singularity
+	./nextflow run main.nf -profile singularity,slurm $(EP)
 
 
 # ~~~~~ CLEANUP ~~~~~ #
@@ -146,6 +150,3 @@ clean-all: clean clean-output clean-work
 	rm -f trace*.txt*
 	rm -f *.html*
 
-TIMESTAMP=$(shell date +%s)
-clean-conda:
-	[ -d conda ] && mv conda ".conda.old.${TIMESTAMP}" && rm -rf ".conda.old.${TIMESTAMP}" &
