@@ -40,6 +40,50 @@ docker-test: docker
 	docker run --rm -ti stevekm/nf-bio-basic bash
 
 
+# ~~~~~ CREATE SINGULARITY IMAGE ON MAC USING VAGRANT ~~~~~ #
+# # Requires Vagrant install:
+# brew cask install virtualbox
+# brew cask install vagrant # https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_x86_64.dmg
+# brew cask install vagrant-manager
+# #
+# set up directories and files for Vagrant
+vagrant-installed:
+	type vagrant >/dev/null 2>&1 || { echo >&2 "Vagrant required but not found. Aborting."; exit 1; }
+
+# singularity-vm:
+# 	mkdir -p singularity-vm
+#
+# singularity-vm/Vagrantfile: singularity-vm
+# 	if [ ! -f singularity-vm/Vagrantfile ]; then \
+# 	cd singularity-vm && \
+# 	vagrant init singularityware/singularity-2.4 && \
+# 	sed -i '' 's|  # config.vm.synced_folder "../data", "/vagrant_data"|  config.vm.synced_folder "image", "/image"|' Vagrantfile ; \
+# 	fi
+#
+# singularity-vm/image: singularity-vm
+# 	mkdir -p singularity-vm/image
+
+singularity-vm/image/Singularity:
+	/bin/cp -v Singularity singularity-vm/image/Singularity
+
+# Create the Singularity container file
+singularity-vm/image/nf-bio-basic.simg: singularity-vm/image/Singularity
+	cd singularity-vm && \
+	vagrant up && \
+	vagrant ssh -c 'cd /image && sudo singularity build nf-bio-basic.simg Singularity'
+
+singularity-container: singularity-vm/image/nf-bio-basic.simg
+
+singularity-vm/image/multiqc.txt: singularity-vm/image/nf-bio-basic.simg
+	cd singularity-vm && \
+	vagrant up && \
+	vagrant ssh -c 'cd /image && singularity exec nf-bio-basic.simg multiqc --version > multiqc.txt'
+
+singularity-test: singularity-vm/image/multiqc.txt
+	cat singularity-vm/image/multiqc.txt
+
+
+
 # ~~~~~ RUN PIPELINE ~~~~~ #
 # $ make run EP='-profile sge -resume'
 run: install

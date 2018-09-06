@@ -8,3 +8,8 @@ nextflow
 .now.projectlog.tsv
 .conda.old.*
 trace.txt*
+*.simg
+singularity-vm/image/multiqc.txt
+singularity-vm/image/Singularity
+singularity-vm/.vagrant/
+.DS_Store

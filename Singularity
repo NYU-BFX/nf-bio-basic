@@ -1,6 +1,7 @@
-BootStrap: debootstrap
+BootStrap: docker
 OSVersion: xenial
 MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+From: ubuntu:16.04
 
 %post
     # ~~~~~ BASIC SETUP ~~~~~ #
